@@ -4,11 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host --open",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@meta2d/core": "^1.0.38",
+    "@meta2d/plugin-mind-core": "^1.0.1",
+    "antlr4": "^4.13.1-patch-1",
     "vue": "^3.3.11"
   },
   "devDependencies": {
