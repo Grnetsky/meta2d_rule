@@ -16,15 +16,12 @@ function changeHandler(v) {
         <img :height="navList.logo.height" :src="navList.logo.src" :alt="navList.logo.alt" />
       </template>
         <MenuItem v-for="(item,index) in navList.defaults" :key="index" :menu="item"></MenuItem>
-      <t-submenu value="2" title="菜单2">
-        <t-menu-item value="2-1"> 子菜单2-1 </t-menu-item>
-        <t-menu-item value="2-2"> 子菜单2-2 </t-menu-item>
-        <t-menu-item value="2-3"> 子菜单2-3 </t-menu-item>
-      </t-submenu>
       <template #operations>
-        <t-button v-for="(item,index) in navList.operations" :key="index" variant="text" shape="square">
-          <template #icon><t-icon :name="item.icon" /></template>
-        </t-button>
+<!--        <t-button v-for="(item,index) in navList.operations" :key="index" variant="text" shape="square" @[item.event]="item.func">-->
+<!--          <template #icon><t-icon :size="item.size || 'medium'" :name="item.icon" /></template>-->
+<!--        </t-button>-->
+        <MenuItem v-for="(item,index) in navList.operations" :key="index" :menu="item"></MenuItem>
+
       </template>
     </t-head-menu>
   </div>

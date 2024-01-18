@@ -1,10 +1,8 @@
 <script setup>
-
-import Meta2d from "../components/Meta2d.vue";
-import Materials from "../components/Materials.vue";
 import Nav from "../components/Nav.vue";
 import {reactive} from "vue";
 import {basicMaterials} from "@/config/menu.js";
+import Menu from "@/components/Menu.vue";
 let menuList = reactive(basicMaterials)
 </script>
 
@@ -14,8 +12,12 @@ let menuList = reactive(basicMaterials)
       <Nav></Nav>
     </div>
     <div class="body">
-      <Materials :menu-list="menuList"></Materials>
-      <Meta2d></Meta2d>
+      <Menu :menu-list="menuList"></Menu>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </div>
   </div>
 </template>

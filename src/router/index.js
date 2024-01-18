@@ -3,9 +3,10 @@
 // 我们后面再讨论嵌套路由。
 import Home from "@/view/home.vue"
 import { createRouter, createWebHashHistory } from 'vue-router';
+import ConfigRule from "@/view/home/ConfigRule.vue";
 const routes = [
-    { path: '/', component: Home },
-    // { path: '/about', component: About },
+    { path: '/configRule', component: import('@/view/home/ConfigRule.vue') },
+    { path: '/design', component:import('@/view/home/Meta2d.vue') },
 ]
 
 const router = createRouter({
