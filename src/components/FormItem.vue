@@ -3,7 +3,6 @@ const {data:i} = defineProps(['data'])
 </script>
 
 <template>
-
           <!--          输入框-->
           <t-input v-model="i.bindProp[i.prop]" :placeholder="i.option?.placeholder || '请输入'" v-if="i.type==='input'" @[i.event]="i.func" :type="i.option?.type||'text'"/>
 <!--          文件框-->

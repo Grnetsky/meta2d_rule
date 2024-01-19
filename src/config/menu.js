@@ -1,4 +1,5 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
+import {dialog} from "@/core/extension/meta2dExtension.js";
 
 export const basicMaterials = [
     {
@@ -61,7 +62,7 @@ export const basicNavList = {
         alt:'logo'
     },
     defaults:[{
-        title:'生成规则',
+        title:'生成代码',
         icon:'',
         value:'1-1',
         event:'click',
@@ -72,9 +73,27 @@ export const basicNavList = {
     operations:[{
         icon:'play-circle',
         size:'25px',
+        value:'2-1',
         event:'click',
         func(){
-            DiagramParse(meta2d.data())
+            let result = DiagramParse(meta2d.data());
+            let d = dialog()
+            d.update({
+                body:"执行结果为: " + JSON.stringify(result)
+            })
+            d.show()
+        }
+    },{
+        icon:'bug',
+        size:'25px',
+        value:'2-2',
+        event:'click',
+        func(){
+            let d = dialog()
+            d.update({
+                body:"开启debug模式"
+            })
+            d.show()
         }
     }]
 }

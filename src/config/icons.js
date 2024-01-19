@@ -1,3 +1,8 @@
+import ActionDialog from "@/components/DialogForms/ActionDialog.vue";
+import StartDialog from "@/components/DialogForms/StartDialog.vue";
+import RuleDialog from "@/components/DialogForms/RuleDialog.vue";
+import EndDialog from "@/components/DialogForms/EndDialog.vue";
+
 export const BasicIcon = [
     {
         name: 'rectangle',
@@ -12,6 +17,7 @@ export const BasicIcon = [
             rule:{
                 type:'start',
                 input:'',
+                code:''
             }
         }
     },
@@ -27,6 +33,7 @@ export const BasicIcon = [
             rule:{
                 type:'end',
                 input:'',
+                code:''
             }
         }
     },
@@ -42,6 +49,7 @@ export const BasicIcon = [
             rule:{
                 type:'rule',
                 input:'',
+                code:''
             }
         }
     },
@@ -58,7 +66,32 @@ export const BasicIcon = [
             rule:{
                 type:'action',
                 input:'',
+                code:'data.index += 1;',
+                data:{
+                    code:''
+                }
             }
         }
     }
 ]
+
+export const IconsForm = {
+    'action':[
+        {
+            label: '代码',
+            type: 'input',
+            event:'change',
+            func:(...args)=>{
+                console.log(args)
+                console.log('代码改变了')
+            }
+        }
+    ]
+}
+
+export let IconComponentMap = {
+    'action': ActionDialog,
+    'start': StartDialog,
+    'end': EndDialog,
+    'rule': RuleDialog,
+}
