@@ -1,5 +1,6 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
+import {executeMode} from "@/config/system.js";
 
 export const basicMaterials = [
     {
@@ -76,11 +77,11 @@ export const basicNavList = {
         value:'2-1',
         event:'click',
         func(){
-            let result = DiagramParse(meta2d.data());
-            let d = dialog()
-            d.update({
-                body:"执行结果为: " + JSON.stringify(result)
-            })
+            let queue = DiagramParse(meta2d.data());
+            let result = executeMode.run(queue)
+            let d = dialog({
+                body:"执行结果为: " + JSON.stringify(result)}
+            )
             d.show()
         }
     },{

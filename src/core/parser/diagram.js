@@ -29,18 +29,7 @@ export function DiagramParse (map){
         }
     })
     let queue = graph.topologicalSort()
-    let userdata = {index:1}
-    queue.reduce((prev,curr)=>{
-        let curCode = meta2d.findOne(curr).rule.code
-        console.log(curCode)
-        let res = scopedEval(prev,curCode)
-        if (res.error){
-            ReportError(res.error,res.stack,res.userCode)
-            throw new Error('userCode Error')
-        }
-        return res
-    },userdata)
     // 先处理一个输入的
-    return userdata;
+    return queue;
     // return ''
 }
