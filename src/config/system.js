@@ -45,6 +45,8 @@ async function executeDebug(queue) {
         if(operate === 'next'){
             generateCode = generate.next()
         }
+    }
+    return userdata
 }
 
 function* debugGenerator(queue){
