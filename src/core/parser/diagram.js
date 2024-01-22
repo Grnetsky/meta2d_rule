@@ -9,18 +9,21 @@ export function DiagramParse (map){
     // 图论
     let graph = new Graph()
     let pens = map.pens
-    pens.forEach(pen=>{
-        if(!pen.type){
-            graph.addVertexes(pen.id) //添加节点
-        }
-    })
+    // pens.forEach(pen=>{
+    //     if(!pen.type){
+    //         graph.addVertexes(pen.id) //添加节点
+    //     }
+    // })
     let lines = pens.filter(pen=>pen.type)
     lines.forEach((linePen)=>{
         let from = linePen.anchors[0].connectTo
         let to = linePen.anchors[linePen.anchors.length - 1].connectTo
+        let fromPen = meta2d.findOne(from)
+        let toPen = meta2d.findOne(to)
+        //TODO
+        !graph.vertexesExists(fromPen.id) && graph.addVertexes(fromPen.id)
+        !graph.vertexesExists(toPen.id) && graph.addVertexes(toPen.id)
         if(from && to){
-            let fromPen = meta2d.findOne(from)
-            let toPen = meta2d.findOne(to)
             graph.addEdges(fromPen.id,toPen.id)
         }
     })

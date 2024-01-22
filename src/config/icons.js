@@ -66,7 +66,7 @@ export const BasicIcon = [
             rule:{
                 type:'action',
                 input:'',
-                code:'data.index += 1;',
+                code:'data.index += 1',
                 data:{
                     code:''
                 }
@@ -89,6 +89,7 @@ export const IconsForm = {
     ]
 }
 
+// TODO 此对象仿佛多余了
 export let IconComponentMap = {
     'action': ActionDialog,
     'start': StartDialog,

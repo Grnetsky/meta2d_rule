@@ -1,22 +1,24 @@
 <script setup>
-const {data:i} = defineProps(['data'])
+import CodeEditor from "@/components/MonacoEditor/CodeEditor.vue";
+
+let props = defineProps(['data'])
 </script>
 
 <template>
           <!--          输入框-->
-          <t-input v-model="i.bindProp[i.prop]" :placeholder="i.option?.placeholder || '请输入'" v-if="i.type==='input'" @[i.event]="i.func" :type="i.option?.type||'text'"/>
+          <t-input :label="data.title" :value="data.bindProp[data.prop]" :placeholder="data.option?.placeholder || '请输入'" v-if="data.type==='input'" @[data.event]="data.func" :type="data.option?.type||'text'"/>
 <!--          文件框-->
-            <t-button v-else-if="i.type==='file'"><label :for="i.for" >
-              <input :id="i.for" style="display: none" type="file" :accept="i.option?.accept || '*/*'" @[i.event]="i.func" >
+            <t-button v-else-if="data.type==='file'"><label :for="data.for" >
+              <input :id="data.for" style="display: none" type="file" :accept="data.option?.accept || '*/*'" @[data.event]="data.func" >
                 选择文件
               </label>
             </t-button>
 <!--          数字框-->
-          <t-input-number :placeholder="i.option?.placeholder || '请输入'" :step="i.option?.step || 1" v-model="i.bindProp[i.prop]" :min="i.option?.min ?? -Infinity" :max="i.option?.max ?? Infinity" @[i.event]="i.func" v-else-if="i.type==='number'"/>
+          <t-input-number :placeholder="data.option?.placeholder || '请输入'" :step="data.option?.step || 1" v-model="data.bindProp[data.prop]" :min="data.option?.min ?? -Infinity" :max="data.option?.max ?? Infinity" @[data.event]="data.func" v-else-if="data.type==='number'"/>
 <!--          选择框-->
-          <t-select v-model="i.bindProp[i.prop]" :placeholder="i.option.placeholder" v-else-if="i.type==='select'" @[i.event]="i.func">
+          <t-select v-model="data.bindProp[data.prop]" :placeholder="data.option.placeholder" v-else-if="data.type==='select'" @[data.event]="data.func">
             <t-option
-                v-for="item in i.option.list"
+                v-for="item in data.option.list"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -27,12 +29,13 @@ const {data:i} = defineProps(['data'])
           </t-select>
 
 <!--          取色器-->
-          <t-color-picker v-model="i.bindProp[i.prop]" show-alpha v-else-if="i.type === 'color'" @[i.event]="i.func"/>
+          <t-color-picker v-model="data.bindProp[data.prop]" show-alpha v-else-if="data.type === 'color'" @[data.event]="data.func"/>
 <!--          开关-->
-          <t-switch v-model="i.bindProp[i.prop]" v-else-if="i.type==='switch'" @[i.event]="i.func"/>
+          <t-switch v-model="data.bindProp[data.prop]" v-else-if="data.type==='switch'" @[data.event]="data.func"/>
 
 <!--          按钮-->
-          <t-button :type="i.option.type" v-else-if="i.type === 'button'" @[i.event]="i.func" :style="i.middle?'width:100%;margin: auto;':''">{{i.option.title}}</t-button>
+          <t-button :type="data.option.type" v-else-if="data.type === 'button'" @[data.event]="data.func" :style="data.middle?'width:100%;margin: auto;':''">{{data.option.title}}</t-button>
+          <CodeEditor v-else-if="data.type === 'code'" :code="data.bindProp[data.prop]" @[data.event]="data.func"></CodeEditor>
 </template>
 
 <style scoped>

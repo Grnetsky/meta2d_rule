@@ -42,6 +42,9 @@ export default class Graph {
     getVertexes() {
         return this.#vertexes
     }
+    vertexesExists(v) {
+        return this.#vertexes.includes(v)
+    }
 
     //图的打印
     toString() {
