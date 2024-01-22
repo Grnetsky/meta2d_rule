@@ -1,6 +1,7 @@
 // 图表解析，生成程序关系
 import Graph from "@/core/parser/Graph.js";
 import {scopedEval} from "@/core/parser/Scope.js";
+import {ReportError} from "@/core/utils/error.js";
 /**
  * @description 通过此方法来将meta2d中的图形转换为对应的程序
  * @param map { Meta2dData } 图纸信息
@@ -31,7 +32,13 @@ export function DiagramParse (map){
     let userdata = {index:1}
     queue.reduce((prev,curr)=>{
         let curCode = meta2d.findOne(curr).rule.code
-        return scopedEval(prev,curCode)
+        console.log(curCode)
+        let res = scopedEval(prev,curCode)
+        if (res.error){
+            ReportError(res.error,res.stack,res.userCode)
+            throw new Error('userCode Error')
+        }
+        return res
     },userdata)
     // 先处理一个输入的
     return userdata;

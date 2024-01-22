@@ -1,5 +1,5 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
-import {dialog} from "@/core/extension/meta2dExtension.js";
+import {dialog} from "@/core/utils/dialog.js";
 
 export const basicMaterials = [
     {
