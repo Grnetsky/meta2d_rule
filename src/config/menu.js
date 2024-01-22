@@ -90,11 +90,8 @@ export const basicNavList = {
         value:'2-2',
         event:'click',
         func(){
-            let d = dialog()
-            d.update({
-                body:"开启debug模式"
-            })
-            d.show()
+            let queue = DiagramParse(meta2d.data())
+            let result = executeMode.debug(queue) // 执行debug
         }
     }]
 }

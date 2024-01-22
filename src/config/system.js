@@ -31,7 +31,7 @@ async function executeDebug(queue) {
     let userStop = false // 用户终止代码执行
     let generate = debugGenerator(queue)
     let generateCode = generate.next()
-    while (!generateCode.done && userStop){
+    while (!generateCode.done && !userStop){
         // 若代码未执行完
         let curItem = generateCode.value
         let curCode = curItem.code
@@ -41,11 +41,16 @@ async function executeDebug(queue) {
             throw new Error('userCode Error') // 跳出reduce方法
         }
         // 获取用户下一步操作
-        let { operate } = await getNextOperation()
+        let { operate } = await getNextOperation(res)
+        console.log(curCode,res)
         if(operate === 'next'){
             generateCode = generate.next()
+        }else {
+            // 程序退出
+            break
         }
     }
+    dialog().hide()
     return userdata
 }
 
@@ -60,15 +65,15 @@ function* debugGenerator(queue){
 }
 
 
-function getNextOperation() {
+function getNextOperation(res) {
     return new Promise(resolve => {
         dialog({
-            body:'下一步',
+            body:JSON.stringify(res),
             onConfirm(){
                 resolve({
                     operate:'next'
                 })
             }
-        })
+        }).show()
     })
 }

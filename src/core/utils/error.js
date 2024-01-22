@@ -1,4 +1,6 @@
 import {dialog} from "@/core/utils/dialog.js";
+import {colorTransition} from "./color.js";
+import {deepClone} from "@meta2d/core";
 
 export let errorObj = {}
 export function ReportError(message, stack, code, id) {
@@ -33,14 +35,25 @@ export function ReportError(message, stack, code, id) {
 }
 
 function feedbackWithUI(id) {
+    flushPen(id,{
+        startColor:'#000000',
+        endColor:'#FF0000',
+        duration:1000,
+        frames:20,
+        alternate:true
+    })
+}
+
+// 闪烁图元
+function flushPen(id,config) {
+    let {startColor,endColor,duration,frames,alternate} = config
     let pen = meta2d.findOne(id)
-    pen.frames = [
-        {duration: 200, visible: true, flipX: false, flipY: false, color: 'rgba(0, 0, 0, 1)'},
-        {duration: 200, visible: true, flipX: false, flipY: false, color: 'rgba(66, 0, 0, 1)'},
-        {duration: 200, visible: true, flipX: false, flipY: false, color: 'rgba(117, 1, 1, 1)'},
-        {duration: 200, visible: true, flipX: false, flipY: false, color: 'rgba(184, 0, 0, 1)'},
-        {duration: 200, visible: true, flipX: false, flipY: false, color: 'rgba(255, 0, 0, 1)'},
-        {duration: 200, visible: true, flipX: false, flipY: false}
-    ]
-        meta2d.startAnimate(pen.id)
+    let colors = colorTransition(startColor,endColor,frames)
+    let colorFrames = colors.map((color)=>{
+        return {duration: duration/frames, visible: true, flipX: false, flipY: false, color}
+    })
+    alternate?
+        colorFrames = colorFrames.concat(deepClone(colorFrames).reverse()):''
+    pen.frames = colorFrames
+    meta2d.startAnimate(pen.id)
 }
