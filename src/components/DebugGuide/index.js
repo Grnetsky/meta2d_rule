@@ -26,7 +26,7 @@ export function DebugGuide(props) {
         penId.value = id
         resultReactive.result = result.result
         resultReactive.userCode = result.userCode
-        resultReactive.constTime = result.costTime
+        resultReactive.costTime = result.costTime
         resultReactive.type = result.type
         return DebugGuide.instance
     };

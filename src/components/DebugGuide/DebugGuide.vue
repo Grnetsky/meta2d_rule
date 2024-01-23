@@ -1,14 +1,16 @@
 <template>
   <div class="modal" v-show="visible">
     <!-- 模态框内容 -->
-    {{id}}
-    结果：{{result.result}}
-    <p>代码：{{result.userCode}}</p>
-    <p>执行情况：{{result.type}}</p>
-    <p>耗费时间：{{result.costTime}}</p>
-    <p style="color: red">{{ position.x }} {{position.y}}</p>
-    <button @click="close">Close</button>
-    <button @click="next">{{result.type === 'success'?'下一步':'结束'}}</button>
+    <t-card :title="title" header-bordered :style="{ width: '400px' }">
+      结果：{{result.result}}
+      <p>代码：{{result.userCode}}</p>
+      <p>执行情况：{{result.type}}</p>
+      <p>耗费时间：{{result.costTime}}</p>
+      <template #actions>
+        <t-button @click="close">Close</t-button>
+        <t-button @click="next">{{result.type === 'success'?'下一步':'结束'}}</t-button>
+      </template>
+    </t-card>
   </div>
 </template>
 
@@ -20,9 +22,13 @@ let position = computed(()=>{
     return  {x:0,y:0}
   }
   let pen = meta2d.findOne(props.id.value)
-  let x = meta2d.getPenRect(pen).x + meta2d.getPenRect(pen).width / 2
-  let y = meta2d.getPenRect(pen).y + meta2d.getPenRect(pen).height / 2
-  return {x:x+'px',y:y+'px'};
+  const store = pen.calculative.canvas.store;
+  const worldRect = pen.calculative.worldRect;
+  let pos = {
+    x: worldRect.x + store.data.x + worldRect.width / 2 + 'px',
+    y: worldRect.y + store.data.y + 'px'
+  };
+  return pos
 })
 
 let emit = defineEmits(['close','next','awaitNext'])
@@ -46,6 +52,5 @@ function next() {
     top: v-bind('position.y');
     z-index: 9999;
     left:v-bind('position.x');
-    background-color: rgba(0, 0, 0, 0.5);
   }
 </style>
