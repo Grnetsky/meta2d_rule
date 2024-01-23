@@ -31,10 +31,10 @@ export function ReportError(message, stack, code, id) {
     // 设置日志系统
     setLog()
     // 反馈给用户
-    feedbackWithUI(id)
+    feedbackPenError(id)
 }
 
-function feedbackWithUI(id) {
+function feedbackPenError(id) {
     flushPen(id,{
         startColor:'#000000',
         endColor:'#FF0000',
