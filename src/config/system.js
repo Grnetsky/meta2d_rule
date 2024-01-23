@@ -1,5 +1,5 @@
 import {scopedEval} from "@/core/parser/Scope.js";
-import {errorObj, ReportError} from "@/core/utils/error.js";
+import {errorObj, ReportError} from "@/core/utils/feedback.js";
 import {dialog} from "@/core/utils/dialog.js";
 import {flushPen} from "@/core/utils/color.js";
 import {stopAnimation} from "@/core/utils/animate.js";

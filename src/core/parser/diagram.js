@@ -1,7 +1,5 @@
 // 图表解析，生成程序关系
 import Graph from "@/core/parser/Graph.js";
-import {scopedEval} from "@/core/parser/Scope.js";
-import {ReportError} from "@/core/utils/error.js";
 /**
  * @description 通过此方法来将meta2d中的图形转换为对应的程序
  * @param map { Meta2dData } 图纸信息
