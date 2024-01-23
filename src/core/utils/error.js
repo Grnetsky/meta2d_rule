@@ -1,6 +1,6 @@
 import {dialog} from "@/core/utils/dialog.js";
-import {colorTransition} from "./color.js";
-import {deepClone} from "@meta2d/core";
+import {flushPen} from "@/core/utils/color.js";
+import {setLog} from "@/core/log/index.js";
 
 export let errorObj = {}
 export function ReportError(message, stack, code, id) {
@@ -11,9 +11,9 @@ export function ReportError(message, stack, code, id) {
         body: (h) => {
             // 使用h函数返回VNode
             return h('div', {}, [
-                h('p', {}, `错误信息：${message}`),
-                h('p', {}, `错误代码：${code}`),
-                h('p', {}, `错误堆栈：${stack}`)
+                h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)]),
+                h('H4', {style:'color:blue'}, ['错误代码',h('p',{style:'color:tomato'},code)]),
+                // h('p', {}, `错误堆栈：${stack}`)
             ]);
         },
         onConfirm() {
@@ -29,7 +29,7 @@ export function ReportError(message, stack, code, id) {
     d.show()
 
     // 设置日志系统
-
+    setLog()
     // 反馈给用户
     feedbackWithUI(id)
 }
@@ -44,16 +44,3 @@ function feedbackWithUI(id) {
     })
 }
 
-// 闪烁图元
-function flushPen(id,config) {
-    let {startColor,endColor,duration,frames,alternate} = config
-    let pen = meta2d.findOne(id)
-    let colors = colorTransition(startColor,endColor,frames)
-    let colorFrames = colors.map((color)=>{
-        return {duration: duration/frames, visible: true, flipX: false, flipY: false, color}
-    })
-    alternate?
-        colorFrames = colorFrames.concat(deepClone(colorFrames).reverse()):''
-    pen.frames = colorFrames
-    meta2d.startAnimate(pen.id)
-}

@@ -3,16 +3,24 @@ export function scopedEval(scope, expr) {
     // TODO 此处应当引入用户输入数据的全局变量！！！！！
     // 函数的参数名称与作用域的键相匹配，函数体是表达式
     try {
+        let st = Date.now()
         // 默认返回data，用户定义的数据
         const func = new Function('data'/*这是变量名列表*/, `${expr};return data;`);
     // 将作用域的值作为参数传递
-        return func(scope)
+        let res = func(scope)
+
+        return {
+            result:res,
+            userCode:expr,
+            type:'success',
+            costTime:Date.now()-st
+        }
     } catch (e) {
         return {
             error:e.message,
             stack:e.stack,
             userCode:expr,
-            type:'userCodeError'
+            type:'error'
         };
     }
 }

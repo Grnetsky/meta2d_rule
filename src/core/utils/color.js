@@ -1,3 +1,6 @@
+import {deepClone} from "@meta2d/core";
+import {startAnimation} from "@/core/utils/animate.js";
+
 export function colorTransition(startColor, endColor, frames) {
     // 初始化颜色值
     const startRgb = hexToRgb(startColor);
@@ -35,7 +38,7 @@ function hexToRgb(hex) {
 function rgbToHex({r, g, b}) {
     function componentToHex(c) {
         const hex = c.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
+        return hex.length === 1 ? "0" + hex : hex;
     }
     return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 }
@@ -43,3 +46,28 @@ function rgbToHex({r, g, b}) {
 function calculateStep(startValue, endValue, steps) {
     return (endValue - startValue) / steps;
 }
+
+/**
+ * @description 闪烁图元动画
+ * @param id {string} 图元id
+ * @param config {Object} 动画配置
+ * @param config.startColor {string} 起始颜色
+ * @param config.endColor {string} 结束颜色
+ * @param config.duration {number} 动画持续时间（毫秒）
+ * @param config.frames {number} 动画帧数
+ * @param config.alternate {boolean} 是否交替
+ ** */
+export function flushPen(id,config) {
+    let {startColor,endColor,duration,frames,alternate} = config
+    let pen = meta2d.findOne(id)
+    let colors = colorTransition(startColor,endColor,frames)
+    let colorFrames = colors.map((color)=>{
+        return {duration: duration/frames,shadowBlur:50/frames,shadowColor:color, visible: true, flipX: false, flipY: false, color}
+    })
+    alternate?
+        colorFrames = colorFrames.concat(deepClone(colorFrames).reverse()):''
+    pen.frames = colorFrames
+    // 执行动画
+    startAnimation(pen.id)
+}
+
