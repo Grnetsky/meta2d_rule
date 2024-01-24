@@ -1,12 +1,15 @@
 <template>
-  <div class="modal" v-show="visible">
+  <div ref="modalRef" class="modal" v-show="visible">
     <!-- 模态框内容 -->
-    <t-card :title="title" header-bordered :style="{ width: '400px' }">
+    <t-card header-bordered :style="{ width: '400px' }">
+      <template #title>
+        <div  ref="controlRef" class="title" :style="{color:result.error?'red':'green'}">{{result.error?'异常':'正常'}}</div>
+      </template>
       结果：{{result.result}}
       <p>代码：{{result.userCode}}</p>
       <p>执行情况：{{result.type}}</p>
       <p>耗费时间：{{result.costTime}}</p>
-      <template #actions>
+      <template #footer>
         <t-button @click="close">Close</t-button>
         <t-button @click="next">{{result.type === 'success'?'下一步':'结束'}}</t-button>
       </template>
@@ -15,8 +18,16 @@
 </template>
 
 <script setup>
-import {computed, watch} from "vue";
+import {computed, ref, onMounted} from "vue";
+import {makeDraggable} from "@/core/utils/other.js";
 let props = defineProps(['result','visible','id'])
+let controlRef = ref(null)
+let modalRef = ref(null)
+let timer = 0
+onMounted(()=>{
+  makeDraggable(modalRef.value,controlRef.value)
+})
+
 let position = computed(()=>{
   if(!props.id.value){
     return  {x:0,y:0}
@@ -52,5 +63,8 @@ function next() {
     top: v-bind('position.y');
     z-index: 9999;
     left:v-bind('position.x');
+  }
+  .title{
+    cursor: pointer;
   }
 </style>

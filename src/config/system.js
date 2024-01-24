@@ -36,7 +36,6 @@ async function executeDebug(queue) {
     let generate = debugGenerator(queue)
     let generateCode = generate.next()
     let debugGuide = DebugGuide({
-        result:{},
         onNext(){
             console.log('next,xxxxxxxx')
         }

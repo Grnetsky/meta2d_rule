@@ -80,7 +80,10 @@ export const basicNavList = {
             let queue = DiagramParse(meta2d.data());
             let result = executeMode.run(queue)
             let d = dialog({
-                body:"执行结果为: " + JSON.stringify(result)}
+                body:"执行结果为: " + JSON.stringify(result),
+                header:"成功",
+                theme:"success"
+                },
             )
             d.show()
         }

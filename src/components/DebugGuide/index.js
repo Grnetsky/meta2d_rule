@@ -8,7 +8,13 @@ export function DebugGuide(props) {
     const visible = ref(false);
     const { onNext,result} = options;
     const penId = ref('')
-    const resultReactive = reactive(result)
+    const resultReactive = reactive(result || {
+        result:{},
+        userCode:'',
+        costTime:'',
+        type:'',
+        error:undefined
+    })
     const show = () => {
         visible.value = true;
         return DebugGuide.instance
@@ -28,6 +34,7 @@ export function DebugGuide(props) {
         resultReactive.userCode = result.userCode
         resultReactive.costTime = result.costTime
         resultReactive.type = result.type
+        resultReactive.error = result.error
         return DebugGuide.instance
     };
     const setResolve = (resolve) => {
