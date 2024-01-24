@@ -150,7 +150,9 @@ export default class Graph {
 
         // 检查是否所有顶点都被排序了，如果没有，说明图中存在环
         if (count !== this.#vertexes.length) {
-            throw new Error('The graph is not a DAG and cannot have a topological sorting.');
+            return {
+                error:"出现了环形图。不合法"
+            }
         }
 
         return sortedOrder;

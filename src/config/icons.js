@@ -2,6 +2,8 @@ import ActionDialog from "@/components/DialogForms/ActionDialog.vue";
 import StartDialog from "@/components/DialogForms/StartDialog.vue";
 import RuleDialog from "@/components/DialogForms/RuleDialog.vue";
 import EndDialog from "@/components/DialogForms/EndDialog.vue";
+import {scopedEval} from "@/core/parser/Scope.js";
+import {ReportError} from "@/core/utils/feedback.js";
 
 export const BasicIcon = [
     {
@@ -47,7 +49,7 @@ export const BasicIcon = [
             height: 100,
             text:'判断',
             rule:{
-                type:'rule',
+                type:'if',
                 input:'',
                 code:''
             }
@@ -94,5 +96,42 @@ export let IconComponentMap = {
     'action': ActionDialog,
     'start': StartDialog,
     'end': EndDialog,
-    'rule': RuleDialog,
+    'if': RuleDialog,
+}
+
+// 定义每个图元的行为
+export let IconBehaviourMap = {
+
+    'action': {
+        /**
+         * @description 此行为执行函数，可以为用户定义的函数，也可以为用户设置的逻辑行为
+         * */
+        behavior:(env,rule,id)=>{
+            let curCode = rule.code
+            let res = scopedEval(env,curCode)
+            if (res.error){
+                ReportError('userCode',{message:res.error,stack:res.stack,code:res.userCode,id})
+                throw new Error('userCode Error')
+            }
+            return res.result
+        }
+    },
+
+    'start': {
+        behavior:(env,rule,id)=>{
+
+        }
+    },
+
+    'end': {
+        behavior:(env,rule,id)=>{
+
+        }
+    },
+
+    'if': {
+        behavior:(env,rule,id)=>{
+
+        }
+    },
 }

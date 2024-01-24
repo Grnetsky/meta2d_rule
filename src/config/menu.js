@@ -1,6 +1,7 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
 import {executeMode} from "@/config/system.js";
+import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [
     {
@@ -78,6 +79,10 @@ export const basicNavList = {
         event:'click',
         func(){
             let queue = DiagramParse(meta2d.data());
+            if(queue.error){
+                ReportError('parse',{message:queue.error})
+                return
+            }
             let result = executeMode.run(queue)
             let d = dialog({
                 body:"执行结果为: " + JSON.stringify(result),
@@ -94,7 +99,13 @@ export const basicNavList = {
         event:'click',
         func(){
             let queue = DiagramParse(meta2d.data())
-            let result = executeMode.debug(queue) // 执行debug
+            if(queue.error){
+                ReportError('parse',{message:queue.error})
+                return
+            }
+            executeMode.debug(queue).then(()=>{
+                console.log('debug over')
+            }) // 执行debug
         }
     }]
 }

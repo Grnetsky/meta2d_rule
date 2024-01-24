@@ -4,6 +4,7 @@ import {dialog} from "@/core/utils/dialog.js";
 import {flushPen} from "@/core/utils/color.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
+import {IconBehaviourMap} from "@/config/icons.js";
 
 export let executeMode = {
     'debug':executeDebug,
@@ -15,17 +16,13 @@ function executeRun(queue) {
     let userdata = {index:1}
     // 初始化
     systemInit()
-    queue.reduce((prev,curr)=>{
-        let curCode = meta2d.findOne(curr).rule.code
-        console.log(curCode)
-        let res = scopedEval(prev,curCode)
-        if (res.error){
-            ReportError(res.error,res.stack,res.userCode,curr)
-            throw new Error('userCode Error')
-        }
-        return res.result
+    let res = queue.reduce((prev,curr)=>{
+        // 此处只设置对于action类型的处理情况，未做解耦处理
+        let curIcon = meta2d.findOne(curr)
+        let behaviour = IconBehaviourMap[curIcon.rule.type] // 获取当前图标的行为
+        return behaviour.behavior(prev,curIcon.rule,curIcon.id)
     },userdata)
-    return userdata
+    return res
 }
 
 // debug 调试模式

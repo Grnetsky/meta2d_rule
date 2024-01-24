@@ -27,81 +27,25 @@ export function getDialogInstance() {
 
 function getDialogData(pen) {
     let reactivePen = reactive(deepClone(pen))
-    switch (pen.rule.type){
-        case 'action':
-            return {
-                header:pen.id,
-                body:(h)=>{
-                    return h(IconComponentMap[pen.rule.type],{
-                        pen:reactivePen,
-                        onUpdateValue:updatePenProp(reactivePen)
-                    })
-                },
-                width:'50%',
-                onConfirm(){
-                    console.log('写入数据')
-                    save(reactivePen,pen)
-                    dialog(pen).hide()
-                }
-            }
-        case 'start':
-            return {
-                header:pen.id,
-                body:(h)=>{
-                    return h(IconComponentMap[pen.rule.type],{
-                        pen:reactivePen,
-                        onUpdateValue:updatePenProp(reactivePen)
-                    })
-                },
-                width:'50%',
-                onConfirm(){
-                    console.log('写入数据')
-                    save(reactivePen,pen)
-                    dialog(pen).hide()
-                }
-            }
-        case 'rule':
-            return {
-                header:pen.id,
-                body:(h)=>{
-                    return h(IconComponentMap[pen.rule.type],{
-                        pen:reactivePen,
-                        onUpdateValue:updatePenProp(reactivePen)
-                    })
-                },
-                width:'50%',
-                onConfirm(){
-                    console.log('写入数据')
-                    save(reactivePen,pen)
-                    dialog(pen).hide()
-                }
-            }
-        case 'end':
-            return {
-                header:pen.id,
-                body:(h)=>{
-                    return h(IconComponentMap[pen.rule.type],{
-                        pen:reactivePen,
-                        onUpdateValue:updatePenProp(reactivePen)
-                    })
-                },
-                width:'50%',
-                onConfirm(){
-                    console.log('写入数据')
-                    save(reactivePen,pen)
-                    dialog(pen).hide()
-                }
-            }
+    return {
+        header:pen.id,
+        body:(h)=>{
+            return h(IconComponentMap[pen.rule.type],{
+                pen:reactivePen,
+                onUpdateValue:updatePenProp(reactivePen)
+            })
+        },
+        width:'50%',
+        onConfirm(){
+            console.log('写入数据')
+            save(reactivePen,pen)
+            dialog(pen).hide()
+        }
     }
 }
 
 function updatePenProp(reactivePen) {
     return (v)=>{
-        // let originPen = meta2d.findOne(reactivePen.id)
-        // meta2d.setValue({
-        //     id:originPen.id,
-        //     [v.prop]:v.value
-        // })
         !reactivePen.changeMap && (reactivePen.changeMap = new Map())
         reactivePen.changeMap.set(v.prop,v.value)
         setter(reactivePen,v.prop,v.value)
