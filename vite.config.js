@@ -24,7 +24,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
-            '@meta2d': path.resolve(__dirname, '../meta2d.js/packages'),
+            // '@meta2d': path.resolve(__dirname, '../meta2d.js/packages'),
         },
     },
 })
