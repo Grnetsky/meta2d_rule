@@ -23,7 +23,7 @@ export function DiagramParse (map){
 }
 
 
-export function findGoto(id) {
+export function setGoto(id) {
     let pen = meta2d.findOne(id)
     let lines = pen.connectedLines
 

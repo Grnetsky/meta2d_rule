@@ -5,7 +5,7 @@ import {flushPen} from "@/core/utils/color.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
-import {findGoto} from "@/core/parser/diagram.js";
+import {setGoto} from "@/core/parser/diagram.js";
 
 export const systemEnv = {
     env:'run'
@@ -115,7 +115,7 @@ export function recurseExecute(env,rule,id) {
     }
 
     // 此处应当寻找下一个执行的目标
-    findGoto(result.id)
+    setGoto(result.id)
     // 深度优先
     let goto = rule.goto;
     goto.forEach(item =>{
@@ -131,7 +131,7 @@ export function* recurseExecuteDebug(env, rule, id) {
         result,
         id
     };
-    findGoto(result.id)
+    setGoto(result.id)
     // 深度优先
     let goto = rule.goto;
     if (goto.length === 0) {

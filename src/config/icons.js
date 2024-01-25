@@ -6,6 +6,7 @@ import {scopedEval} from "@/core/parser/Scope.js";
 import {ReportError} from "@/core/utils/feedback.js";
 import {recurseExecute, recurseExecuteDebug, systemEnv} from "@/config/system.js";
 import {deepClone} from "@meta2d/core";
+import {setGoto} from "@/core/parser/diagram.js";
 
 export const BasicIcon = [
     {
@@ -126,6 +127,7 @@ export let IconBehaviourMap = {
             if (systemEnv.env === 'run'){
                 // 开始往下执行
                 let result = null
+                setGoto(id)
                 let goto = rule.goto;
                 goto.forEach(item =>{
                     result = recurseExecute(env,meta2d.findOne(item).rule,item)
@@ -140,7 +142,6 @@ export let IconBehaviourMap = {
 
         },
         debug(env,rule,id){
-
             return recurseExecuteDebug(env,meta2d.findOne(id).rule,id)
         }
     },

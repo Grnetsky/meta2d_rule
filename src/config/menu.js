@@ -86,6 +86,8 @@ export const basicNavList = {
                 return
             }
             let result = executeMode.run(start)
+            console.log(result
+            )
             let d = dialog({
                 body:"执行结果为: " + JSON.stringify(result),
                 header:"成功",
