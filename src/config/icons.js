@@ -157,6 +157,7 @@ export let IconBehaviourMap = {
             let outerLine = getOuterLine(id)
             rule.true_goto = [];
             rule.false_goto = []
+            rule.isForceGoto = true
             outerLine.forEach((line)=>{
                 let linePen = meta2d.findOne(line.lineId)
                 if(linePen.text === '是'){
@@ -169,9 +170,9 @@ export let IconBehaviourMap = {
             let code = rule.code
             let res = scopedEval(env,code,id)
             if(res.result){
-                rule.goto = rule.true_goto
+                rule.goto = deepClone(rule.true_goto)
             }else {
-                rule.goto =  rule.false_goto
+                rule.goto = deepClone(rule.false_goto)
             }
             return res
         }

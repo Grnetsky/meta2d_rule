@@ -26,7 +26,7 @@ export function DiagramParse (map){
 export function setGoto(id) {
     let pen = meta2d.findOne(id)
     // 可以手动设置下一个目标，若不设置则为自动根据连线关系设置
-    if(pen.rule.goto.length !== 0)return pen.rule.goto
+    if(pen.rule.goto.length !== 0 || pen.rule.isForceGoto)return pen.rule.goto
 
     let lines = pen.connectedLines || []
     lines.forEach(i=>{
