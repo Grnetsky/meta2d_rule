@@ -18,7 +18,7 @@ export let executeMode = {
 //  执行调试
 function executeRun(start) {
     systemEnv.env = 'run'
-    let userdata = {index:1}
+    let userdata = JSON.parse(start.rule.input)
     // 初始化
     let behaviour = IconBehaviourMap[start.rule.type]
     let result = behaviour.behavior(userdata,start.rule,start.id)
@@ -36,7 +36,7 @@ function executeRun(start) {
 // debug 调试模式
 async function executeDebug(start) {
     systemEnv.env = 'debug'
-    let userdata = {index:1}
+    let userdata = JSON.parse(start.rule.input)
     let debugGuide = DebugGuide().show()
 
     let behaviour = IconBehaviourMap[start.rule.type]
@@ -112,6 +112,9 @@ export function recurseExecute(env,rule,id) {
     if (result.error){
         ReportError('userCode',{message:result.error,stack:result.stack,code:result.userCode,id:result.id})
         throw new Error('userCode Error')
+    }
+    if(result.terminate){
+
     }
 
     // 此处应当寻找下一个执行的目标

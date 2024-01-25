@@ -35,7 +35,7 @@ let props = defineProps(['data'])
 
 <!--          按钮-->
           <t-button :type="data.option.type" v-else-if="data.type === 'button'" @[data.event]="data.func" :style="data.middle?'width:100%;margin: auto;':''">{{data.option.title}}</t-button>
-          <CodeEditor v-else-if="data.type === 'code'" :code="data.bindProp[data.prop]" @[data.event]="data.func"></CodeEditor>
+          <CodeEditor :language="data.language" v-else-if="data.type === 'code'" :code="data.bindProp[data.prop]" @[data.event]="data.func"></CodeEditor>
 </template>
 
 <style scoped>
