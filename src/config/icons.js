@@ -127,7 +127,7 @@ export let IconBehaviourMap = {
             }
         },
         debug(env,prev,rule,id){
-            return recurseExecuteDebug(env,prev,meta2d.findOne(id).rule,id)
+            return recurseExecuteDebug(env,prev,rule,id)
         }
     },
 

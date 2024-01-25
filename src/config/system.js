@@ -40,7 +40,7 @@ async function executeDebug(start) {
     let debugGuide = DebugGuide().show()
 
     let behaviour = IconBehaviourMap[start.rule.type]
-    let generator = behaviour.debug(userdata,start.rule,start.id)
+    let generator = behaviour.debug(userdata,undefined,start.rule,start.id)
     let generateResult = generator.next()
     while (!generateResult.done){
         // 获取用户下一步操作
@@ -151,7 +151,7 @@ export function* recurseExecuteDebug(env, prev, rule, id) {
             let childRule = meta2d.findOne(item).rule;
             if (childRule) {
                 // 使用 yield* 递归子生成器
-                yield* recurseExecuteDebug(env, result, childRule, item);
+                yield* recurseExecuteDebug(env, result.result, childRule, item);
             }
         } catch (error) {
             console.error("An error occurred during recursion", error);
