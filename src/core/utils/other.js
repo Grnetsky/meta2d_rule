@@ -4,7 +4,6 @@ export function makeDraggable(dragElement, handle) {
     handle.addEventListener('mousedown', dragMouseDown);
 
     function dragMouseDown(e) {
-        console.log('mousedown')
         e.preventDefault();
         mouseX = e.clientX;
         mouseY = e.clientY;

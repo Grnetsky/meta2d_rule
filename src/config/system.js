@@ -22,7 +22,6 @@ function executeRun(start) {
     // 初始化
     let behaviour = IconBehaviourMap[start.rule.type]
     let result = behaviour.behavior(userdata,start.rule,start.id)
-    console.log(result,'rrrrrrrrr')
     // 异常处理
 
     // let res = queue.reduce((prev,curr)=>{
@@ -92,6 +91,7 @@ function getNextOperation(debugGuide) {
 }
 
 export function systemInit() {
+    systemEnv.env = 'run';
     // 初始化
     let pens = meta2d.store.data.pens.filter(pen=>!pen.type)
     pens.forEach(i=>{

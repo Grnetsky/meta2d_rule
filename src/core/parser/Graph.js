@@ -53,7 +53,6 @@ export default class Graph {
             this.#edges.get(item).forEach((i) => {
                 result += ' ' + i
             })
-            console.log(result)
         })
     }
 

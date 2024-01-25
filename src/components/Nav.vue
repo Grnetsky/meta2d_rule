@@ -5,7 +5,6 @@ import MenuItem from "@/components/MenuItem.vue";
 let navList = reactive(basicNavList)
 let activeValue = ref('')
 function changeHandler(v) {
-  console.log(v)
 }
 </script>
 

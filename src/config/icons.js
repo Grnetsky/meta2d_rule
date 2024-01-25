@@ -83,20 +83,6 @@ export const BasicIcon = [
     }
 ]
 
-export const IconsForm = {
-    'action':[
-        {
-            label: '代码',
-            type: 'input',
-            event:'change',
-            func:(...args)=>{
-                console.log(args)
-                console.log('代码改变了')
-            }
-        }
-    ]
-}
-
 // TODO 此对象仿佛多余了
 export let IconComponentMap = {
     'action': ActionDialog,
@@ -137,8 +123,8 @@ export let IconBehaviourMap = {
                     result:deepClone(env),
                     type:'success',
                     id
-                }}
-
+                }
+            }
         },
         debug(env,rule,id){
             return recurseExecuteDebug(env,meta2d.findOne(id).rule,id)
