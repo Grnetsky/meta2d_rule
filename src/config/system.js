@@ -21,7 +21,7 @@ function executeRun(start) {
     let userdata = JSON.parse(start.rule.input)
     // 初始化
     let behaviour = IconBehaviourMap[start.rule.type]
-    let result = behaviour.behavior(userdata,start.rule,start.id)
+    let result = behaviour.behavior(userdata,undefined,start.rule,start.id)
     // 异常处理
 
     // let res = queue.reduce((prev,curr)=>{
@@ -106,9 +106,9 @@ function terminateCode(curItem) {
 
 
 // 递归调用
-export function recurseExecute(env,rule,id) {
+export function recurseExecute(env,prev,rule,id) {
     let behaviour = IconBehaviourMap[rule.type]
-    let result = behaviour.behavior(env,rule,id)
+    let result = behaviour.behavior(env,prev,rule,id)
     if (result.error){
         ReportError('userCode',{message:result.error,stack:result.stack,code:result.userCode,id:result.id})
         throw new Error('userCode Error')
@@ -122,14 +122,14 @@ export function recurseExecute(env,rule,id) {
     // 深度优先
     let goto = rule.goto;
     goto.forEach(item =>{
-        result = recurseExecute(env,meta2d.findOne(item).rule,item)
+        result = recurseExecute(env,result.result,meta2d.findOne(item).rule,item)
     })
     return result
 }
 
-export function* recurseExecuteDebug(env, rule, id) {
+export function* recurseExecuteDebug(env, prev, rule, id) {
     let behaviour = IconBehaviourMap[rule.type];
-    let result = behaviour.behavior(env, rule, id);
+    let result = behaviour.behavior(env, prev, rule, id);
     yield {
         result,
         id
@@ -151,7 +151,7 @@ export function* recurseExecuteDebug(env, rule, id) {
             let childRule = meta2d.findOne(item).rule;
             if (childRule) {
                 // 使用 yield* 递归子生成器
-                yield* recurseExecuteDebug(env, childRule, item);
+                yield* recurseExecuteDebug(env, result, childRule, item);
             }
         } catch (error) {
             console.error("An error occurred during recursion", error);

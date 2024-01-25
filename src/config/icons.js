@@ -98,9 +98,9 @@ export let IconBehaviourMap = {
         /**
          * @description 此行为执行函数，可以为用户定义的函数，也可以为用户设置的逻辑行为
          * */
-        behavior:(env,rule,id)=>{
+        behavior:(env,prev,rule,id)=>{
             let curCode = rule.code
-            let res = scopedEval(env,curCode,id)
+            let res = scopedEval(env,prev,curCode,id)
             return res
         }
     },
@@ -108,14 +108,14 @@ export let IconBehaviourMap = {
     'start': {
         /**
          * @description 此处进行代码的递归执行*/
-        behavior:(env,rule,id)=>{
+        behavior:(env,prev,rule,id)=>{
             if (systemEnv.env === 'run'){
                 // 开始往下执行
                 let result = null
                 setGoto(id)
                 let goto = rule.goto;
                 goto.forEach(item =>{
-                    result = recurseExecute(env,meta2d.findOne(item).rule,item)
+                    result = recurseExecute(env,prev,meta2d.findOne(item).rule,item)
                 })
                 return result
             }else {
@@ -126,19 +126,19 @@ export let IconBehaviourMap = {
                 }
             }
         },
-        debug(env,rule,id){
-            return recurseExecuteDebug(env,meta2d.findOne(id).rule,id)
+        debug(env,prev,rule,id){
+            return recurseExecuteDebug(env,prev,meta2d.findOne(id).rule,id)
         }
     },
 
     'end': {
-        behavior:(env,rule,id)=>{
+        behavior:(env,prev,rule,id)=>{
 
         }
     },
 
     'if': {
-        behavior:(env,rule,id)=>{
+        behavior:(env,prev,rule,id)=>{
             // 获取连线关系，确定true、false的执行路径
             let outerLine = getOuterLine(id)
             rule.true_goto = [];
@@ -154,7 +154,7 @@ export let IconBehaviourMap = {
             })
             // 这里暂时写死为执行代码
             let code = rule.code
-            let res = scopedEval(env,code,id)
+            let res = scopedEval(env,prev,code,id)
             if(res.result){
                 rule.goto = deepClone(rule.true_goto)
             }else {
