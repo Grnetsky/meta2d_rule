@@ -1,78 +1,71 @@
 import {scopedEval} from "@/core/parser/Scope.js";
-import {errorObj, ReportError} from "@/core/utils/feedback.js";
+import {errorObj, feedbackPenError, feedbackPenSuccess, ReportError} from "@/core/utils/feedback.js";
 import {dialog} from "@/core/utils/dialog.js";
 import {flushPen} from "@/core/utils/color.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
+import {findGoto} from "@/core/parser/diagram.js";
 
+export const systemEnv = {
+    env:'run'
+}
 export let executeMode = {
     'debug':executeDebug,
     'run':executeRun,
 }
 
 //  执行调试
-function executeRun(queue) {
+function executeRun(start) {
+    systemEnv.env = 'run'
     let userdata = {index:1}
     // 初始化
-    systemInit()
-    let res = queue.reduce((prev,curr)=>{
-        // 此处只设置对于action类型的处理情况，未做解耦处理
-        let curIcon = meta2d.findOne(curr)
-        let behaviour = IconBehaviourMap[curIcon.rule.type] // 获取当前图标的行为
-        return behaviour.behavior(prev,curIcon.rule,curIcon.id)
-    },userdata)
-    return res
+    let behaviour = IconBehaviourMap[start.rule.type]
+    let result = behaviour.behavior(userdata,start.rule,start.id)
+    console.log(result,'rrrrrrrrr')
+    // 异常处理
+
+    // let res = queue.reduce((prev,curr)=>{
+    //     // 此处只设置对于action类型的处理情况，未做解耦处理
+    //     let curIcon = meta2d.findOne(curr)
+    //     let behaviour = IconBehaviourMap[curIcon.rule.type] // 获取当前图标的行为
+    //     return behaviour.behavior(prev,curIcon.rule,curIcon.id)
+    // },userdata)
+    return result
 }
 
 // debug 调试模式
-async function executeDebug(queue) {
+async function executeDebug(start) {
+    systemEnv.env = 'debug'
     let userdata = {index:1}
-    systemInit()
-    let userStop = false // 用户终止代码执行
-    let generate = debugGenerator(queue)
-    let generateCode = generate.next()
-    let debugGuide = DebugGuide({
-        onNext(){
-            console.log('next,xxxxxxxx')
-        }
-    }).show()
-    while (!generateCode.done && !userStop){
-        // 若代码未执行完
-        let curItem = generateCode.value
-        let curCode = curItem.code
+    let debugGuide = DebugGuide().show()
 
-        let res = scopedEval(userdata,curCode)
-        if (res.error){
-            // ReportError(res.error,res.stack,res.userCode,curItem.id)
-            flushPen(curItem.id,{
-                startColor: '#000000',
-                endColor: '#fd0000',
-                duration:1000,
-                frames:60,
-                alternate:true
-            })
-            debugGuide.next(curItem.id,res)
-            throw new Error('userCode Error') // 跳出reduce方法
-        }else {
-            flushPen(curItem.id,{
-                startColor: '#000000',
-                endColor: '#01fd53',
-                duration:1000,
-                frames:60,
-                alternate:true
-            })
-        }
-        debugGuide.next(curItem.id,res)
+    let generateResult = {value:{},done:false}
+    let behaviour = IconBehaviourMap[start.rule.type]
+    let generator = behaviour.debug(userdata,start.rule,start.id)
+    while (!generateResult.done){
+        generateResult = generator.next()
         // 获取用户下一步操作
-        let { operate } = await getNextOperation(debugGuide,res,curItem.id)
+        // 若代码未执行完
+        console.log(generateResult,'generateResult')
+        let result = generateResult.value.result
+        let id = generateResult.value.id
+        debugGuide.next(id,result)
+        // 异常处理
+        if (result.error){
+            feedbackPenError(id)
+        }else {
+            feedbackPenSuccess(id)
+        }
+        // 获取用户下一步操作
+        let { operate } = await getNextOperation(debugGuide)
         // 用户点击执行下一步
         if(operate === 'next'){
-            generateCode = generate.next()
-            stopAnimation(curItem.id)
+            stopAnimation(id)
         }else {
+            // 用户点击其他行为
             debugGuide.destroy()
-            terminateCode(curItem)
+            stopAnimation(id)
             // 程序退出
             break
         }
@@ -92,17 +85,80 @@ function* debugGenerator(queue){
 }
 
 
-function getNextOperation(debugGuide,res,id) {
+function getNextOperation(debugGuide) {
     return new Promise(resolve => {
         debugGuide.setResolve(resolve)
     })
 }
 
-function systemInit() {
+export function systemInit() {
     // 初始化
+    let pens = meta2d.store.data.pens.filter(pen=>!pen.type)
+    pens.forEach(i=>{
+        i.rule.goto = []
+    })
     stopAnimation(errorObj.id)
 }
 
 function terminateCode(curItem) {
     stopAnimation(curItem.id)
+}
+
+
+// 递归调用
+export function recurseExecute(env,rule,id) {
+    let behaviour = IconBehaviourMap[rule.type]
+    let result = behaviour.behavior(env,rule,id)
+    if (result.error){
+        ReportError('userCode',{message:result.error,stack:result.stack,code:result.userCode,id:result.id})
+        throw new Error('userCode Error')
+    }
+
+    // 此处应当寻找下一个执行的目标
+    findGoto(result.id)
+    // 深度优先
+    let goto = rule.goto;
+    goto.forEach(item =>{
+        result = recurseExecute(env,meta2d.findOne(item).rule,item)
+    })
+    return result
+}
+
+export function* recurseExecuteDebug(env, rule, id) {
+    let behaviour = IconBehaviourMap[rule.type];
+    let result = behaviour.behavior(env, rule, id);
+    yield {
+        result,
+        id
+    };
+    findGoto(result.id)
+    // 深度优先
+    let goto = rule.goto;
+    if (goto.length === 0) {
+        // 递归的基本情况
+        return {
+            result,
+            id
+        };
+    }
+
+    // let results = [result]; // 收集所有结果
+    for (let item of goto) {
+        try {
+            let childRule = meta2d.findOne(item).rule;
+            if (childRule) {
+                // 使用 yield* 递归子生成器
+                yield* recurseExecuteDebug(env, childRule, item);
+            }
+        } catch (error) {
+            console.error("An error occurred during recursion", error);
+            // 处理错误或提前终止递归
+            break;
+        }
+    }
+    // 可以选择将所有结果合并返回
+    return {
+        result,
+        id
+    };
 }

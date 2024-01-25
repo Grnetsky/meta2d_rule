@@ -1,6 +1,6 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {executeMode} from "@/config/system.js";
+import {executeMode, systemInit} from "@/config/system.js";
 import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [
@@ -78,12 +78,14 @@ export const basicNavList = {
         value:'2-1',
         event:'click',
         func(){
-            let queue = DiagramParse(meta2d.data());
-            if(queue.error){
-                ReportError('parse',{message:queue.error})
+            systemInit()
+            let start = DiagramParse(meta2d.store.data);
+            // TODO 此处返回值永远不会为error
+            if(start.error){
+                ReportError('parse',{message:start.error,suggest:start.suggest})
                 return
             }
-            let result = executeMode.run(queue)
+            let result = executeMode.run(start)
             let d = dialog({
                 body:"执行结果为: " + JSON.stringify(result),
                 header:"成功",
@@ -98,12 +100,13 @@ export const basicNavList = {
         value:'2-2',
         event:'click',
         func(){
-            let queue = DiagramParse(meta2d.data())
-            if(queue.error){
-                ReportError('parse',{message:queue.error})
+            systemInit()
+            let start = DiagramParse(meta2d.store.data)
+            if(start.error){
+                ReportError('parse',{message:start.error,suggest:start.suggest})
                 return
             }
-            executeMode.debug(queue).then(()=>{
+            executeMode.debug(start).then(()=>{
                 console.log('debug over')
             }) // 执行debug
         }

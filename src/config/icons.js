@@ -4,6 +4,8 @@ import RuleDialog from "@/components/DialogForms/RuleDialog.vue";
 import EndDialog from "@/components/DialogForms/EndDialog.vue";
 import {scopedEval} from "@/core/parser/Scope.js";
 import {ReportError} from "@/core/utils/feedback.js";
+import {recurseExecute, recurseExecuteDebug, systemEnv} from "@/config/system.js";
+import {deepClone} from "@meta2d/core";
 
 export const BasicIcon = [
     {
@@ -19,6 +21,7 @@ export const BasicIcon = [
             rule:{
                 type:'start',
                 input:'',
+                goto:[],
                 code:''
             }
         }
@@ -34,6 +37,7 @@ export const BasicIcon = [
             text:'结束',
             rule:{
                 type:'end',
+                goto:[],
                 input:'',
                 code:''
             }
@@ -50,6 +54,7 @@ export const BasicIcon = [
             text:'判断',
             rule:{
                 type:'if',
+                goto:[],
                 input:'',
                 code:''
             }
@@ -67,6 +72,7 @@ export const BasicIcon = [
             text:'行为',
             rule:{
                 type:'action',
+                goto:[],
                 input:'',
                 code:'data.index += 1',
                 data:{
@@ -108,18 +114,34 @@ export let IconBehaviourMap = {
          * */
         behavior:(env,rule,id)=>{
             let curCode = rule.code
-            let res = scopedEval(env,curCode)
-            if (res.error){
-                ReportError('userCode',{message:res.error,stack:res.stack,code:res.userCode,id})
-                throw new Error('userCode Error')
-            }
-            return res.result
+            let res = scopedEval(env,curCode,id)
+            return res
         }
     },
 
     'start': {
+        /**
+         * @description 此处进行代码的递归执行*/
         behavior:(env,rule,id)=>{
+            if (systemEnv.env === 'run'){
+                // 开始往下执行
+                let result = null
+                let goto = rule.goto;
+                goto.forEach(item =>{
+                    result = recurseExecute(env,meta2d.findOne(item).rule,item)
+                })
+                return result
+            }else {
+                return {
+                    result:deepClone(env),
+                    type:'success',
+                    id
+                }}
 
+        },
+        debug(env,rule,id){
+
+            return recurseExecuteDebug(env,meta2d.findOne(id).rule,id)
         }
     },
 

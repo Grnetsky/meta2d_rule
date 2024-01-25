@@ -3,7 +3,7 @@ import {flushPen} from "@/core/utils/color.js";
 import {setLog} from "@/core/log/index.js";
 
 export let errorObj = {}
-export function ReportError(type, {message, stack, code, id}) {
+export function ReportError(type, {message, stack, code, id,suggest}) {
     // 创建对话框
     let d = null
     switch (type){
@@ -37,8 +37,8 @@ export function ReportError(type, {message, stack, code, id}) {
                 body: (h) => {
                     // 使用h函数返回VNode
                     return h('div', {}, [
-                        h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)]),
-                        h('H4', {style:'color:blue'}, ['错误代码',h('p',{style:'color:tomato'},code)]),
+                        h('H4', {style:'color:red'}, ['错误信息： '+message]),
+                        h('H4', {style:'color:orange'}, ['建议： '+suggest]),
                         // h('p', {}, `错误堆栈：${stack}`)
                     ]);
                 },
@@ -70,7 +70,7 @@ export function ReportError(type, {message, stack, code, id}) {
     // 反馈给用户
 }
 
-function feedbackPenError(id) {
+export function feedbackPenError(id) {
     flushPen(id,{
         startColor:'#000000',
         endColor:'#FF0000',
@@ -80,7 +80,23 @@ function feedbackPenError(id) {
     })
 }
 
-function ReportWarn() {
-    
+export function feedbackPenSuccess(id){
+    flushPen(id,{
+        startColor:'#000000',
+        endColor:'#00e1ff',
+        duration:1000,
+        frames:20,
+        alternate:true
+    })
+}
+
+export function feedbackPenWarn(id){
+    flushPen(id,{
+        startColor:'#000000',
+        endColor:'#ff6a00',
+        duration:1000,
+        frames:20,
+        alternate:true
+    })
 }
 
