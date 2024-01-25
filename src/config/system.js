@@ -40,14 +40,12 @@ async function executeDebug(start) {
     let userdata = {index:1}
     let debugGuide = DebugGuide().show()
 
-    let generateResult = {value:{},done:false}
     let behaviour = IconBehaviourMap[start.rule.type]
     let generator = behaviour.debug(userdata,start.rule,start.id)
+    let generateResult = generator.next()
     while (!generateResult.done){
-        generateResult = generator.next()
         // 获取用户下一步操作
         // 若代码未执行完
-        console.log(generateResult,'generateResult')
         let result = generateResult.value.result
         let id = generateResult.value.id
         debugGuide.next(id,result)
@@ -62,6 +60,8 @@ async function executeDebug(start) {
         // 用户点击执行下一步
         if(operate === 'next'){
             stopAnimation(id)
+            generateResult = generator.next()
+
         }else {
             // 用户点击其他行为
             debugGuide.destroy()

@@ -25,8 +25,10 @@ export function DiagramParse (map){
 
 export function setGoto(id) {
     let pen = meta2d.findOne(id)
-    let lines = pen.connectedLines
+    // 可以手动设置下一个目标，若不设置则为自动根据连线关系设置
+    if(pen.rule.goto.length !== 0)return pen.rule.goto
 
+    let lines = pen.connectedLines || []
     lines.forEach(i=>{
         let line = meta2d.findOne(i.lineId)
         let from = line.anchors[0].connectTo
@@ -44,4 +46,21 @@ export function setGoto(id) {
     return [
         ...pen.rule.goto
      ]
+}
+
+// 获取某个图元的下一个目标列表
+export function getToPen(id) {
+    let pen = meta2d.findOne(id)
+    let lines = pen.connectedLines || []
+    let toLines = lines.filter(i=> meta2d.findOne(i.lineId).anchors[0].connectTo === id)
+    return toLines.map(line=>meta2d.findOne(line.anchors[line.anchors.length - 1]?.connectTo))
+}
+
+export function getOuterLine(id) {
+    let pen = meta2d.findOne(id)
+    let lines = pen.connectedLines || []
+    return lines.filter(i=> {
+        let line= meta2d.findOne(i.lineId)
+        return (line.anchors[0].connectTo === id) && line.anchors[line.anchors.length - 1].connectTo
+    })
 }

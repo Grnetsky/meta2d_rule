@@ -3,10 +3,9 @@ import StartDialog from "@/components/DialogForms/StartDialog.vue";
 import RuleDialog from "@/components/DialogForms/RuleDialog.vue";
 import EndDialog from "@/components/DialogForms/EndDialog.vue";
 import {scopedEval} from "@/core/parser/Scope.js";
-import {ReportError} from "@/core/utils/feedback.js";
 import {recurseExecute, recurseExecuteDebug, systemEnv} from "@/config/system.js";
 import {deepClone} from "@meta2d/core";
-import {setGoto} from "@/core/parser/diagram.js";
+import {getOuterLine, setGoto} from "@/core/parser/diagram.js";
 
 export const BasicIcon = [
     {
@@ -154,7 +153,27 @@ export let IconBehaviourMap = {
 
     'if': {
         behavior:(env,rule,id)=>{
-
+            // 获取连线关系，确定true、false的执行路径
+            let outerLine = getOuterLine(id)
+            rule.true_goto = [];
+            rule.false_goto = []
+            outerLine.forEach((line)=>{
+                let linePen = meta2d.findOne(line.lineId)
+                if(linePen.text === '是'){
+                    rule.true_goto.push(linePen.anchors[linePen.anchors.length - 1].connectTo)
+                }else if(linePen.text === '否'){
+                    rule.false_goto.push(linePen.anchors[linePen.anchors.length - 1].connectTo)
+                }
+            })
+            // 这里暂时写死为执行代码
+            let code = rule.code
+            let res = scopedEval(env,code,id)
+            if(res.result){
+                rule.goto = rule.true_goto
+            }else {
+                rule.goto =  rule.false_goto
+            }
+            return res
         }
     },
 }
