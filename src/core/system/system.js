@@ -26,6 +26,8 @@ function executeRun(start) {
     }catch (e) {
         result = {
             type:'runtime',
+            error:e.name,
+            message:e.message,
             ...e.data,
             suggest: getErrorSuggest(e.message)
         }
