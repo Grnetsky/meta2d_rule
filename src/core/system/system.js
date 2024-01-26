@@ -3,7 +3,7 @@ import {dialog} from "@/core/utils/dialog.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
-import {setGoto} from "@/core/parser/diagram.js";
+import {DiagramParse, setGoto} from "@/core/parser/diagram.js";
 import {getErrorSuggest} from "@/config/suggest.js";
 
 export const systemEnv = {
@@ -57,7 +57,7 @@ async function executeDebug(start) {
         }else {
             feedbackPenSuccess(id)
         }
-        // 获取用户下一步操作
+        // 获取用户下一步操作 TODO 若用户一直不操作，会导致promise未得到解决而使内存泄漏
         let { operate } = await getNextOperation(debugGuide)
         // 用户点击执行下一步
         if(operate === 'next'){
@@ -66,7 +66,6 @@ async function executeDebug(start) {
 
         }else {
             // 用户点击其他行为
-            debugGuide.destroy()
             stopAnimation(id)
             // 程序退出
             break
@@ -165,4 +164,20 @@ export function* recurseExecuteDebug(env, prev, rule, id) {
         result,
         id
     };
+}
+
+// 保存规则流程
+export function save(data) {
+    // TODO 如何设计数据类型??
+    //  检验图纸数据是否合法
+    systemInit()
+    let start = DiagramParse(meta2d.store.data);
+    // TODO 此处返回值永远不会为error
+    let result = executeMode.run(start)
+    if(result.error){
+        ReportError('save',result)
+        return false
+    }else {
+
+    }
 }

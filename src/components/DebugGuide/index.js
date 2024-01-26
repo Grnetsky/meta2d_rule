@@ -27,6 +27,9 @@ export function DebugGuide(props) {
         return DebugGuide.instance
     }
     const destroy = () => {
+        DebugGuide.__resolve({
+            operate:'terminate'
+        })
         DebugGuide.instance.unmount(); // 卸载组件
         stopAnimation(penId.value)
         document.body.removeChild(mountNode); // 清除挂载点

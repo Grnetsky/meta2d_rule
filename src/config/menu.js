@@ -1,6 +1,6 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {executeMode, systemInit} from "@/core/system/system.js";
+import {executeMode, save, systemInit} from "@/core/system/system.js";
 import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [
@@ -71,7 +71,15 @@ export const basicNavList = {
         func(){
             alert('click')
         }
-    },],
+    },{
+        title:'保存规则',
+        icon:'',
+        value:'1-2',
+        event:'click',
+        func(){
+            save()
+        }
+    }],
     operations:[{
         icon:'play-circle',
         size:'25px',
