@@ -1,5 +1,6 @@
 import {createApp, ref,reactive} from 'vue';
 import DebugGuideComponent from './DebugGuide.vue';
+import {stopAnimation} from "@/core/utils/animate.js";
 
 // 命令式debug引导组件
 export function DebugGuide(props) {
@@ -12,7 +13,10 @@ export function DebugGuide(props) {
         result:{},
         userCode:'',
         costTime:'',
+        env:'',
         type:'',
+        noReport:false,
+        done:false,
         error:undefined
     })
     const show = () => {
@@ -24,17 +28,24 @@ export function DebugGuide(props) {
         return DebugGuide.instance
     }
     const destroy = () => {
+        DebugGuide.__resolve({
+            operate:'terminate'
+        })
         DebugGuide.instance.unmount(); // 卸载组件
+        stopAnimation(penId.value)
         document.body.removeChild(mountNode); // 清除挂载点
         DebugGuide.instance = null
     }
-    const next = (id,result) => {
+    const next = (id,result,done) => {
         penId.value = id
         resultReactive.result = result.result
         resultReactive.userCode = result.userCode
         resultReactive.costTime = result.costTime
         resultReactive.type = result.type
         resultReactive.error = result.error
+        resultReactive.env = result.env
+        resultReactive.done = done
+        resultReactive.noReport = result.noReport
         return DebugGuide.instance
     };
     const setResolve = (resolve) => {

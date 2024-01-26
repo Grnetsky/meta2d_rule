@@ -1,6 +1,6 @@
-import {DiagramParse} from "@/core/parser/diagram.js";
+import {getStart} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {executeMode} from "@/config/system.js";
+import {executeMode, save, systemEnv, systemInit} from "@/core/system/system.js";
 import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [
@@ -71,26 +71,40 @@ export const basicNavList = {
         func(){
             alert('click')
         }
-    },],
+    },{
+        title:'保存规则',
+        icon:'',
+        value:'1-2',
+        event:'click',
+        func(){
+            save()
+        }
+    }],
     operations:[{
         icon:'play-circle',
         size:'25px',
         value:'2-1',
         event:'click',
         func(){
-            let queue = DiagramParse(meta2d.data());
-            if(queue.error){
-                ReportError('parse',{message:queue.error})
+            systemInit()
+            let start = getStart(meta2d.store.data);
+            // TODO 此处返回值永远不会为error
+            if(start.error){
+                ReportError('parse',{message:start.error,suggest:start.suggest})
                 return
             }
-            let result = executeMode.run(queue)
-            let d = dialog({
-                body:"执行结果为: " + JSON.stringify(result),
-                header:"成功",
-                theme:"success"
-                },
-            )
-            d.show()
+            let result = executeMode.run(start)
+            if(result && result.error && !result.noReport){
+                ReportError(result.type,result)
+            }else {
+                let d = dialog({
+                        body:"执行结果为: " + JSON.stringify(systemEnv.output),
+                        header:"成功",
+                        theme:"success",
+                    },
+                )
+                d.show()
+            }
         }
     },{
         icon:'bug',
@@ -98,12 +112,13 @@ export const basicNavList = {
         value:'2-2',
         event:'click',
         func(){
-            let queue = DiagramParse(meta2d.data())
-            if(queue.error){
-                ReportError('parse',{message:queue.error})
+            systemInit()
+            let start = getStart(meta2d.store.data)
+            if(start.error){
+                ReportError('parse',{message:start.error,suggest:start.suggest})
                 return
             }
-            executeMode.debug(queue).then(()=>{
+            executeMode.debug(start).then(()=>{
                 console.log('debug over')
             }) // 执行debug
         }

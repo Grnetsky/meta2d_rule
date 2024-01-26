@@ -37,7 +37,6 @@ function getDialogData(pen) {
         },
         width:'50%',
         onConfirm(){
-            console.log('写入数据')
             save(reactivePen,pen)
             dialog(pen).hide()
         }

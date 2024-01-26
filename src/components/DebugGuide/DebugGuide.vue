@@ -3,15 +3,16 @@
     <!-- 模态框内容 -->
     <t-card header-bordered :style="{ width: '400px' }">
       <template #title>
-        <div  ref="controlRef" class="title" :style="{color:result.error?'red':'green'}">{{result.error?'异常':'正常'}}</div>
+        <div  ref="controlRef" class="title" :style="{color:(result.error && !result.noReport)?'red':'green'}">{{(result.error && !result.noReport)?'异常':'正常'}}</div>
       </template>
-      结果：{{result.result}}
+      返回值：{{result.result}}
+      <p>全局变量：{{result.env}}</p>
       <p>代码：{{result.userCode}}</p>
       <p>执行情况：{{result.type}}</p>
       <p>耗费时间：{{result.costTime}}</p>
       <template #footer>
-        <t-button @click="close">Close</t-button>
-        <t-button @click="next">{{result.type === 'success'?'下一步':'结束'}}</t-button>
+        <t-button @click="close">停止调试</t-button>
+        <t-button @click="next">{{(result.type === 'success' && !result.done)?'下一步':'结束'}}</t-button>
       </template>
     </t-card>
   </div>
@@ -48,7 +49,7 @@ function close(){
 }
 
 function next() {
-  if(props.result.type === 'success'){
+  if(props.result.type === 'success' && !props.result.done){
     emit('next')
     emit('awaitNext')
   }else {

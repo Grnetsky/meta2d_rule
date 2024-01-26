@@ -6,7 +6,8 @@ import {init} from "@/core/extension/meta2dExtension.js";
 
 onMounted(()=>{
   let meta2d = new Meta2d("meta2d",{
-    toArrow:'triangle'
+    toArrow:'triangle',
+    drawingLineName:'polyline'
   });
   init()
 })

@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    配置规则
+    在这里配置你的规则
   </div>
 </template>
 

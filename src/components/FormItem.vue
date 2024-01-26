@@ -14,7 +14,7 @@ let props = defineProps(['data'])
               </label>
             </t-button>
 <!--          数字框-->
-          <t-input-number :placeholder="data.option?.placeholder || '请输入'" :step="data.option?.step || 1" v-model="data.bindProp[data.prop]" :min="data.option?.min ?? -Infinity" :max="data.option?.max ?? Infinity" @[data.event]="data.func" v-else-if="data.type==='number'"/>
+          <t-input-number :label="data.title" auto-width theme="column" :placeholder="data.option?.placeholder || '请输入'" :step="data.option?.step || 1" v-model="data.bindProp[data.prop]" :min="data.option?.min ?? -Infinity" :max="data.option?.max ?? Infinity" @[data.event]="data.func" v-else-if="data.type==='number'"/>
 <!--          选择框-->
           <t-select v-model="data.bindProp[data.prop]" :placeholder="data.option.placeholder" v-else-if="data.type==='select'" @[data.event]="data.func">
             <t-option
@@ -35,7 +35,7 @@ let props = defineProps(['data'])
 
 <!--          按钮-->
           <t-button :type="data.option.type" v-else-if="data.type === 'button'" @[data.event]="data.func" :style="data.middle?'width:100%;margin: auto;':''">{{data.option.title}}</t-button>
-          <CodeEditor v-else-if="data.type === 'code'" :code="data.bindProp[data.prop]" @[data.event]="data.func"></CodeEditor>
+          <CodeEditor :language="data.language" v-else-if="data.type === 'code'" :code="data.bindProp[data.prop]" @[data.event]="data.func"></CodeEditor>
 </template>
 
 <style scoped>

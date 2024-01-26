@@ -53,7 +53,6 @@ export default class Graph {
             this.#edges.get(item).forEach((i) => {
                 result += ' ' + i
             })
-            console.log(result)
         })
     }
 
@@ -90,19 +89,21 @@ export default class Graph {
     // 深度优先搜索（DFS） 类似于二叉树的先序遍历
     dfs(v, handler) {  // 访问开始点  处理函数
         let color = this.initializeColor()  // 初始化颜色
-        this.dfsVisit(v, color, handler)
+        return this.dfsVisit(v, color, handler)
     }
 
-    dfsVisit(v, color, handler) {//当前访问节点  当前颜色  处理函数
+    dfsVisit(v, color, handler,list = []) {//当前访问节点  当前颜色  处理函数
         color[v] = color[1] // 颜色设置为灰色
-        handler(v)  // 处理该顶点
+        handler?.(v)  // 处理该顶点
+        list.push(v)
         let vList = this.#edges.get(v)  // 获取该顶点的其他顶点
         vList.forEach((item) => {
             if (color[item] === color[0]) {
-                this.dfsVisit(item, color, handler)
+                this.dfsVisit(item, color, handler,list)
             }
         })
         color[v] = color[2]
+        return list
     }
 
     // 拓扑排序（Topological Sort） 针对有向无环图（DAG）
