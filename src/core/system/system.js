@@ -51,9 +51,9 @@ async function executeDebug(start) {
         // 若代码未执行完
         let result = generateResult.value.result
         id = generateResult.value.id
-        debugGuide.next(id,result,generateResult.done)
+        debugGuide.next(id,result,result.isEnd || generateResult.done)
         // 异常处理
-        if (result.error){
+        if (result.error && !result.noReport){
             feedbackPenError(id)
         }else {
             feedbackPenSuccess(id)

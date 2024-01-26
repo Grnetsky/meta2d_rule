@@ -3,7 +3,7 @@
     <!-- 模态框内容 -->
     <t-card header-bordered :style="{ width: '400px' }">
       <template #title>
-        <div  ref="controlRef" class="title" :style="{color:result.error?'red':'green'}">{{result.error?'异常':'正常'}}</div>
+        <div  ref="controlRef" class="title" :style="{color:(result.error && !result.noReport)?'red':'green'}">{{(result.error && !result.noReport)?'异常':'正常'}}</div>
       </template>
       返回值：{{result.result}}
       <p>全局变量：{{result.env}}</p>

@@ -15,6 +15,7 @@ export function DebugGuide(props) {
         costTime:'',
         env:'',
         type:'',
+        noReport:false,
         done:false,
         error:undefined
     })
@@ -44,6 +45,7 @@ export function DebugGuide(props) {
         resultReactive.error = result.error
         resultReactive.env = result.env
         resultReactive.done = done
+        resultReactive.noReport = result.noReport
         return DebugGuide.instance
     };
     const setResolve = (resolve) => {

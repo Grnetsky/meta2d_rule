@@ -140,6 +140,7 @@ export let IconBehaviourMap = {
                 return {
                     ...res,
                     noReport:true,
+                    isEnd:true,
                     error:'terminate',
                 }
             }
