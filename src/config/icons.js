@@ -3,7 +3,7 @@ import StartDialog from "@/components/DialogForms/StartDialog.vue";
 import RuleDialog from "@/components/DialogForms/RuleDialog.vue";
 import EndDialog from "@/components/DialogForms/EndDialog.vue";
 import {scopedEval} from "@/core/parser/Scope.js";
-import {recurseExecute, recurseExecuteDebug, systemEnv} from "@/config/system.js";
+import {recurseExecute, recurseExecuteDebug, systemEnv} from "@/core/system/system.js";
 import {deepClone} from "@meta2d/core";
 import {getOuterLine, setGoto} from "@/core/parser/diagram.js";
 
@@ -20,9 +20,8 @@ export const BasicIcon = [
             borderRadius: 20,
             rule:{
                 type:'start',
-                input:'',
+                input:'{"index":1}',
                 goto:[],
-                code:''
             }
         }
     },

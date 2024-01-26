@@ -12,6 +12,7 @@ export function DebugGuide(props) {
         result:{},
         userCode:'',
         costTime:'',
+        env:'',
         type:'',
         error:undefined
     })
@@ -35,6 +36,7 @@ export function DebugGuide(props) {
         resultReactive.costTime = result.costTime
         resultReactive.type = result.type
         resultReactive.error = result.error
+        resultReactive.env = result.env
         return DebugGuide.instance
     };
     const setResolve = (resolve) => {

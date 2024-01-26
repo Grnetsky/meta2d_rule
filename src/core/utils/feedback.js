@@ -83,7 +83,7 @@ export function feedbackPenError(id) {
 export function feedbackPenSuccess(id){
     flushPen(id,{
         startColor:'#000000',
-        endColor:'#00e1ff',
+        endColor:'#00d721',
         duration:1000,
         frames:20,
         alternate:true

@@ -13,6 +13,7 @@ export function scopedEval(scope, previous,expr,id) {
 
         return {
             result:deepClone(res),
+            env:deepClone(scope),
             userCode:expr,
             id:id,
             type:'success',

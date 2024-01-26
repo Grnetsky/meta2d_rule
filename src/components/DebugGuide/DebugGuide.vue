@@ -5,7 +5,8 @@
       <template #title>
         <div  ref="controlRef" class="title" :style="{color:result.error?'red':'green'}">{{result.error?'异常':'正常'}}</div>
       </template>
-      结果：{{result.result}}
+      返回值：{{result.result}}
+      <p>全局变量：{{result.env}}</p>
       <p>代码：{{result.userCode}}</p>
       <p>执行情况：{{result.type}}</p>
       <p>耗费时间：{{result.costTime}}</p>

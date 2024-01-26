@@ -1,6 +1,6 @@
 import {DiagramParse} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {executeMode, systemInit} from "@/config/system.js";
+import {executeMode, systemInit} from "@/core/system/system.js";
 import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [

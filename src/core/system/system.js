@@ -1,7 +1,5 @@
-import {scopedEval} from "@/core/parser/Scope.js";
 import {errorObj, feedbackPenError, feedbackPenSuccess, ReportError} from "@/core/utils/feedback.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {flushPen} from "@/core/utils/color.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
@@ -22,14 +20,7 @@ function executeRun(start) {
     // 初始化
     let behaviour = IconBehaviourMap[start.rule.type]
     let result = behaviour.behavior(userdata,undefined,start.rule,start.id)
-    // 异常处理
 
-    // let res = queue.reduce((prev,curr)=>{
-    //     // 此处只设置对于action类型的处理情况，未做解耦处理
-    //     let curIcon = meta2d.findOne(curr)
-    //     let behaviour = IconBehaviourMap[curIcon.rule.type] // 获取当前图标的行为
-    //     return behaviour.behavior(prev,curIcon.rule,curIcon.id)
-    // },userdata)
     return result
 }
 
