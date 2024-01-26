@@ -3,11 +3,12 @@ import {dialog} from "@/core/utils/dialog.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
-import {DiagramParse, setGoto} from "@/core/parser/diagram.js";
+import {getStart, setGoto} from "@/core/parser/diagram.js";
 import {getErrorSuggest} from "@/config/suggest.js";
 
 export const systemEnv = {
-    env:'run'
+    env:'run',
+    output:'',
 }
 export let executeMode = {
     'debug':executeDebug,
@@ -94,6 +95,7 @@ function getNextOperation(debugGuide) {
 
 export function systemInit() {
     systemEnv.env = 'run';
+    systemEnv.output = ''
     // 初始化
     let pens = meta2d.store.data.pens.filter(pen=>!pen.type)
     pens.forEach(i=>{
@@ -171,13 +173,14 @@ export function save(data) {
     // TODO 如何设计数据类型??
     //  检验图纸数据是否合法
     systemInit()
-    let start = DiagramParse(meta2d.store.data);
+    let start = getStart(meta2d.store.data);
     // TODO 此处返回值永远不会为error
     let result = executeMode.run(start)
     if(result.error){
         ReportError('save',result)
         return false
     }else {
-
+        
+        return true
     }
 }

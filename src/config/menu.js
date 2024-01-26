@@ -1,6 +1,6 @@
-import {DiagramParse} from "@/core/parser/diagram.js";
+import {getStart} from "@/core/parser/diagram.js";
 import {dialog} from "@/core/utils/dialog.js";
-import {executeMode, save, systemInit} from "@/core/system/system.js";
+import {executeMode, save, systemEnv, systemInit} from "@/core/system/system.js";
 import {ReportError} from "@/core/utils/feedback.js";
 
 export const basicMaterials = [
@@ -87,18 +87,18 @@ export const basicNavList = {
         event:'click',
         func(){
             systemInit()
-            let start = DiagramParse(meta2d.store.data);
+            let start = getStart(meta2d.store.data);
             // TODO 此处返回值永远不会为error
             if(start.error){
                 ReportError('parse',{message:start.error,suggest:start.suggest})
                 return
             }
             let result = executeMode.run(start)
-            if(result.error){
+            if(result && result.error && !result.noReport){
                 ReportError(result.type,result)
             }else {
                 let d = dialog({
-                        body:"执行结果为: " + JSON.stringify(result),
+                        body:"执行结果为: " + JSON.stringify(systemEnv.output),
                         header:"成功",
                         theme:"success",
                     },
@@ -113,7 +113,7 @@ export const basicNavList = {
         event:'click',
         func(){
             systemInit()
-            let start = DiagramParse(meta2d.store.data)
+            let start = getStart(meta2d.store.data)
             if(start.error){
                 ReportError('parse',{message:start.error,suggest:start.suggest})
                 return

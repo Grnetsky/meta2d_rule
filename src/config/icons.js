@@ -28,7 +28,7 @@ export const BasicIcon = [
     {
         name: 'circle',
         icon: 'l-circle',
-        text: '结束',
+        text: '结束/输出',
         data:{
             name: 'circle',
             width: 100,
@@ -129,10 +129,21 @@ export let IconBehaviourMap = {
             return recurseExecuteDebug(env,prev,rule,id)
         }
     },
-
+    // output
     'end': {
         behavior:(env,prev,rule,id)=>{
+            let curCode = rule.code
+            let res = scopedEval(env,prev,curCode,id)
 
+            if(res && !res.error){
+                systemEnv.output = deepClone(res.result)
+                return {
+                    ...res,
+                    noReport:true,
+                    error:'terminate',
+                }
+            }
+            return res
         }
     },
 

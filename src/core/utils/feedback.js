@@ -32,7 +32,6 @@ export function ReportError(type, {message, stack, userCode, id,suggest}) {
                     }
                 ]
             })
-            feedbackPenError(id)
             break
         case 'parse':
             d = dialog({
@@ -56,7 +55,6 @@ export function ReportError(type, {message, stack, userCode, id,suggest}) {
                     }
                 ]
             })
-            id && feedbackPenError(id)
             break
         case 'runtime':
             d = dialog({
@@ -67,7 +65,25 @@ export function ReportError(type, {message, stack, userCode, id,suggest}) {
                     return h('div', {}, [
                         h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)]),
                         h('H4', {style:'color:orange'}, ['建议 ',h('p',{},suggest)]),
-                    ])}
+                    ])},
+                onConfirm() {
+                    d.hide()
+                }
+            })
+            break
+        case 'save':
+            d = dialog({
+                header:'保存失败',
+                theme:'danger',
+                body: (h) => {
+                    // 使用h函数返回VNode
+                    return h('div', {}, [
+                        h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)]),
+                        h('H4', {style:'color:orange'}, ['建议 ',h('p',{},suggest)]),
+                    ])},
+                onConfirm() {
+                    d.hide()
+                }
             })
             break
         default:
@@ -77,7 +93,11 @@ export function ReportError(type, {message, stack, userCode, id,suggest}) {
                 body: (h) => {
                     // 使用h函数返回VNode
                     return h('div', {}, [
-                        h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)])])}
+                        h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)])]
+                    )},
+                onConfirm() {
+                    d.hide()
+                }
             })
     }
     d.show()
@@ -85,6 +105,7 @@ export function ReportError(type, {message, stack, userCode, id,suggest}) {
     // 设置日志系统
     setLog()
     // 反馈给用户
+    id && feedbackPenError(id)
 }
 
 export function feedbackPenError(id) {
