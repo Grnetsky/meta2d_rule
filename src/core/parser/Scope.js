@@ -21,11 +21,12 @@ export function scopedEval(scope, previous,expr,id) {
         }
     } catch (e) {
         return {
-            error:e.message,
+            message:e.message,
+            error:e.name,
             stack:e.stack,
             id:id,
             userCode:expr,
-            type:'error'
+            type:'userCode'
         };
     }
 }

@@ -1,4 +1,4 @@
-import {errorObj, feedbackPenError, feedbackPenSuccess, ReportError} from "@/core/utils/feedback.js";
+import {CustomError, errorObj, feedbackPenError, feedbackPenSuccess, ReportError} from "@/core/utils/feedback.js";
 import {dialog} from "@/core/utils/dialog.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
@@ -26,9 +26,7 @@ function executeRun(start) {
     }catch (e) {
         result = {
             type:'runtime',
-            error:e.message,
-            name:e.name,
-            stack:e.stack,
+            ...e.data,
             suggest: getErrorSuggest(e.message)
         }
     }
@@ -111,9 +109,10 @@ function terminateCode(curItem) {
 export function recurseExecute(env,prev,rule,id) {
     let behaviour = IconBehaviourMap[rule.type]
     let result = behaviour.behavior(env,prev,rule,id)
+    // 执行代码时代码发生错误
     if (result.error){
-        ReportError('userCode',{message:result.error,stack:result.stack,code:result.userCode,id:result.id})
-        throw new Error('userCode Error')
+        // 抛出异常
+        throw CustomError(result.message,result)
     }
 
     // 此处应当寻找下一个执行的目标
