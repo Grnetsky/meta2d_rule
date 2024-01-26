@@ -3,7 +3,7 @@ import {dialog} from "@/core/utils/dialog.js";
 import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
-import {getStart, setGoto} from "@/core/parser/diagram.js";
+import {DiagramParse, getStart, setGoto} from "@/core/parser/diagram.js";
 import {getErrorSuggest} from "@/config/suggest.js";
 
 export const systemEnv = {
@@ -174,13 +174,13 @@ export function save(data) {
     //  检验图纸数据是否合法
     systemInit()
     let start = getStart(meta2d.store.data);
-    // TODO 此处返回值永远不会为error
+    // 运行一遍看有无报错
     let result = executeMode.run(start)
-    if(result.error){
+    if(result.error && !result.noReport){
         ReportError('save',result)
         return false
     }else {
-        
+        let json = DiagramParse(meta2d.store.data)
         return true
     }
 }
