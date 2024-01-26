@@ -4,6 +4,7 @@ import {stopAnimation} from "@/core/utils/animate.js";
 import {DebugGuide} from "@/components/DebugGuide/index.js";
 import {IconBehaviourMap} from "@/config/icons.js";
 import {setGoto} from "@/core/parser/diagram.js";
+import {getErrorSuggest} from "@/config/suggest.js";
 
 export const systemEnv = {
     env:'run'
@@ -19,8 +20,18 @@ function executeRun(start) {
     let userdata = JSON.parse(start.rule.input)
     // 初始化
     let behaviour = IconBehaviourMap[start.rule.type]
-    let result = behaviour.behavior(userdata,undefined,start.rule,start.id)
-
+    let result = null
+    try {
+        result = behaviour.behavior(userdata,undefined,start.rule,start.id)
+    }catch (e) {
+        result = {
+            type:'runtime',
+            error:e.message,
+            name:e.name,
+            stack:e.stack,
+            suggest: getErrorSuggest(e.message)
+        }
+    }
     return result
 }
 
@@ -103,9 +114,6 @@ export function recurseExecute(env,prev,rule,id) {
     if (result.error){
         ReportError('userCode',{message:result.error,stack:result.stack,code:result.userCode,id:result.id})
         throw new Error('userCode Error')
-    }
-    if(result.terminate){
-
     }
 
     // 此处应当寻找下一个执行的目标

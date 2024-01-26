@@ -86,13 +86,18 @@ export const basicNavList = {
                 return
             }
             let result = executeMode.run(start)
-            let d = dialog({
-                body:"执行结果为: " + JSON.stringify(result),
-                header:"成功",
-                theme:"success"
-                },
-            )
-            d.show()
+            if(result.error){
+                ReportError('runtime',{message:result.error,suggest:result.suggest,})
+            }else {
+                let d = dialog({
+                        body:"执行结果为: " + JSON.stringify(result),
+                        header:"成功",
+                        theme:"success",
+
+                    },
+                )
+                d.show()
+            }
         }
     },{
         icon:'bug',

@@ -55,7 +55,7 @@ export const BasicIcon = [
                 type:'if',
                 goto:[],
                 input:'',
-                code:''
+                code:'return true;'
             }
         }
     },

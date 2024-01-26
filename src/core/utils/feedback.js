@@ -54,6 +54,17 @@ export function ReportError(type, {message, stack, code, id,suggest}) {
             })
             id && feedbackPenError(id)
             break
+        case 'runtime':
+            d = dialog({
+                header:'运行时错误',
+                body: (h) => {
+                    // 使用h函数返回VNode
+                    return h('div', {}, [
+                        h('H4', {style:'color:red'}, ['错误信息',h('p',{},message)]),
+                        h('H4', {style:'color:orange'}, ['建议 ',h('p',{},suggest)]),
+                    ])}
+            })
+            break
         default:
             d = dialog({
                 header:'未知错误',
