@@ -11,8 +11,8 @@
       <p>执行情况：{{result.type}}</p>
       <p>耗费时间：{{result.costTime}}</p>
       <template #footer>
-        <t-button @click="close">Close</t-button>
-        <t-button @click="next">{{result.type === 'success'?'下一步':'结束'}}</t-button>
+        <t-button @click="close">停止调试</t-button>
+        <t-button @click="next">{{(result.type === 'success' && !result.done)?'下一步':'结束'}}</t-button>
       </template>
     </t-card>
   </div>
@@ -49,7 +49,7 @@ function close(){
 }
 
 function next() {
-  if(props.result.type === 'success'){
+  if(props.result.type === 'success' && !props.result.done){
     emit('next')
     emit('awaitNext')
   }else {

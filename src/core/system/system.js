@@ -44,12 +44,13 @@ async function executeDebug(start) {
     let behaviour = IconBehaviourMap[start.rule.type]
     let generator = behaviour.debug(userdata,undefined,start.rule,start.id)
     let generateResult = generator.next()
+    let id = 0
     while (!generateResult.done){
         // 获取用户下一步操作
         // 若代码未执行完
         let result = generateResult.value.result
-        let id = generateResult.value.id
-        debugGuide.next(id,result)
+        id = generateResult.value.id
+        debugGuide.next(id,result,generateResult.done)
         // 异常处理
         if (result.error){
             feedbackPenError(id)

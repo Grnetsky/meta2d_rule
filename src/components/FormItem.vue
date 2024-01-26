@@ -14,7 +14,7 @@ let props = defineProps(['data'])
               </label>
             </t-button>
 <!--          数字框-->
-          <t-input-number :placeholder="data.option?.placeholder || '请输入'" :step="data.option?.step || 1" v-model="data.bindProp[data.prop]" :min="data.option?.min ?? -Infinity" :max="data.option?.max ?? Infinity" @[data.event]="data.func" v-else-if="data.type==='number'"/>
+          <t-input-number :label="data.title" auto-width theme="column" :placeholder="data.option?.placeholder || '请输入'" :step="data.option?.step || 1" v-model="data.bindProp[data.prop]" :min="data.option?.min ?? -Infinity" :max="data.option?.max ?? Infinity" @[data.event]="data.func" v-else-if="data.type==='number'"/>
 <!--          选择框-->
           <t-select v-model="data.bindProp[data.prop]" :placeholder="data.option.placeholder" v-else-if="data.type==='select'" @[data.event]="data.func">
             <t-option

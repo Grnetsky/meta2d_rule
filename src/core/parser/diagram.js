@@ -42,7 +42,7 @@ export function setGoto(id) {
     })
 
     // 按照index排列执行顺序
-    pen.rule.goto.sort(id=>meta2d.findOne(id).rule.index)
+    pen.rule.goto.sort((id1,id2)=>meta2d.findOne(id1).rule.index - meta2d.findOne(id2).rule.index)
     return [
         ...pen.rule.goto
      ]
