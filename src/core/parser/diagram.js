@@ -1,10 +1,20 @@
 // 图表解析，生成程序关系
 
+
+// 图形转换为json数据格式
 /**
- * @description 通过此方法来将meta2d中的图形转换为对应的程序，如何设计？是否可拓展？？
+ * @description 图形转换为json数据格式
+ * @param map { Meta2dData } 图纸信息
+ * @return data { Json } 返回转换后的图元*/
+export function DiagramParse (map){
+    return ''
+}
+
+/**
+ * @description 获取程序执行的入口
  * @param map { Meta2dData } 图纸信息
  * @return start { Pen } 返回首个start图元*/
-export function DiagramParse (map){
+export function getStart (map){
     // 图论
     let pens = map.pens.filter(pen=>!pen.type);
     let start =  pens.filter(pen=>pen.rule.type === 'start');
